@@ -1,7 +1,7 @@
 {{#layout}}
 
 <h1 id="bf-subject">글쓰기</h1>
-<button id="btn-create" class="btn btn-outline-success my-2 my-sm-0" type="submit" style="display: none;">등록</button>
+<button id="btn-create" class="btn btn-outline-success my-2 my-sm-0" type="submit">등록</button>
 <hr>
 <div id="bf-content-area">
 	<form id="frm" name="frm" action="/put" method="post">
@@ -17,7 +17,6 @@ function initEditor() {
 }
 $(function() {
 	initEditor();
-	$("#btn-create").show();
 })
 </script>
 {{/script}}
