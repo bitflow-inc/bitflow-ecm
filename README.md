@@ -1,2 +1,2 @@
-# bitflow-ecm
-Bitflow's enterprise content management system prototype.
+# bitflow-ent-cms
+Bitflow's Enterprise Contents Management Service Prototype

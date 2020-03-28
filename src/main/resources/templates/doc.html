@@ -1,0 +1,16 @@
+{{#layout}}
+
+<h1 id="bf-subject"></h1>
+<hr>
+<div id="bf-content-area">
+</div>
+
+{{#script}}	
+<script>
+$(function(){
+	var hash = window.location.hash.substr(1)?window.location.hash.substr(1):'';
+	loadContents(hash);
+});
+</script>
+{{/script}}
+{{/layout}}

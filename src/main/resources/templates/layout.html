@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<title>{{layout.title}}</title>
+<link href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/css/bootstrap-treeview.min.css" rel="stylesheet" type="text/css">
+<link href="/synapeditor/synapeditor.min.css" rel="stylesheet" type="text/css">
+{{{layout.style}}}
+<style>
+html, body { height: 100%; }
+.navbar { z-index: 1; border-bottom: 1px solid #eee; }
+#bf-body-wrapper { height: 100%; }
+#bf-subject { font-weight: bold; float:left; margin-left: 12px; }
+.bg-contents { height: 100%; overflow-x: hidden; overflow-y: scroll; padding: 20px; }
+#bf-nav-below { position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding-top: 56px;
+	overflow: hidden; margin: 0; }
+.bf-menu-section { padding: 0; }
+.bg-contents > hr { clear: both; }
+.bf-search-result dd { font-size: 0.7em; max-height: 50px; overflow: hidden; }
+#bf-subject-input { margin-bottom: 12px; }
+.spinner-border { position: fixed; z-index: 999; width: 3rem; height: 3rem; 
+	overflow: visible; margin: auto; top: 0; left: 0; bottom: 0; right: 0; }
+</style>
+</head>
+<body>
+
+<div id="bf-body-wrapper">
+	<nav class="navbar navbar-light bg-light">
+		<a class="navbar-brand" href="/">
+			<img src="/img/ic-logo.png" height="30" class="d-inline-block align-top" alt="bitflow logo">
+			<i>ECM</i>
+		</a>
+		<form class="form-inline">
+			<input id="bf-search" class="form-control mr-sm-2" type="text" placeholder="검색어 입력" aria-label="Search"/>
+			<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="search();">검색</button>
+		</form>
+		<button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="goEdit();">글쓰기</button>
+	</nav>
+	
+	<div id="bf-nav-below" class="row">
+	    <div class="col-3 bf-menu-section">
+	    	<div id="tree"></div>
+	    </div>
+	    <div class="col-9 bg-contents" id="bf-contents">
+	   		{{{layout.body}}}
+	    </div>
+	</div>
+
+</div>
+
+<div class="spinner-border" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-treeview.min.js"></script>
+<script>
+var tree = {{#tree}}{{{tree}}}{{/tree}}{{^tree}}[]{{/tree}};
+function loadContents(id) {
+	$(".spinner-border").show();
+	$.ajax("/api/v1/ecm/doc/" + id)
+		.done(function(msg) {
+			$("#bf-subject").html(msg.result.title);
+			$("#bf-content-area").empty().html(msg.result.contents);
+			$(".bg-contents").scrollTop(0);
+		})
+		.fail(function() {
+		})
+		.always(function() {
+			$(".spinner-border").hide();
+		});
+}
+function onTreeItemClick(event, data) {
+	console.log("onTreeItemClick " + JSON.stringify(data));
+	location.href = "/doc#" + data.id;
+	loadContents(data.id);
+}
+function search() {
+	$(".spinner-border").show();
+	$.ajax("/api/v1/ecm/search/" + $("#bf-search").val())
+		.done(function(msg) {
+			$("#bf-subject").html("검색결과");
+			var list = [];
+			var html = '<dl class="bf-search-result">';
+			for (var i=0;i<msg.result.length;i++) {
+				html += "<dt>" + msg.result[i].title + "</dt><dd>"
+					+ '<a href="javascript:loadContents(\'' + msg.result[i].id + '\')">' + msg.result[i].text + "</a></dd>";
+			}
+			html += "</dl>";
+			$("#bf-content-area").empty();
+			$("#bf-content-area").html(html);
+			$(".bg-contents").scrollTop(0);
+		})
+		.fail(function() {
+		})
+		.always(function() {
+			$(".spinner-border").hide();
+		});
+}
+function goEdit() {
+	var id = window.location.hash.substr(1)?window.location.hash.substr(1):'';
+	location.href='/edit#' + id;
+}
+function goHashLocation() {
+	var id = window.location.hash.substr(1)?window.location.hash.substr(1):'';
+	/* $(".node-selected").removeClass("node-selected"); */
+	loadContents(id);
+}
+
+$(function(){
+	$('#tree').treeview({
+		data: tree,
+		onNodeSelected: onTreeItemClick
+	});
+	$("#bf-search").keypress(function(e) {
+	    if (e.which==13){
+	    	console.log("keyword " + $(this).val());
+			search($(this).val());
+			return false;
+	    }
+	});
+	$("#btn-create").click(function() {
+		document.frm.submit();
+	});
+});
+</script>
+<script src="/synapeditor/synapeditor.config.js"></script>
+<script src="/synapeditor/synapeditor.min.js"></script>
+{{{layout.script}}}
+</body>
+</html>
