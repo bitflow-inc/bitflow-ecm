@@ -81,27 +81,10 @@ function onTreeItemClick(event, data) {
 	location.href = "/doc#" + data.id;
 	loadContents(data.id);
 }
-function search() {
-	$(".spinner-border").show();
-	$.ajax("/api/v1/ecm/search/" + $("#bf-search").val())
-		.done(function(msg) {
-			$("#bf-subject").html("검색결과");
-			var list = [];
-			var html = '<dl class="bf-search-result">';
-			for (var i=0;i<msg.result.length;i++) {
-				html += "<dt>" + msg.result[i].title + "</dt><dd>"
-					+ '<a href="javascript:loadContents(\'' + msg.result[i].id + '\')">' + msg.result[i].text + "</a></dd>";
-			}
-			html += "</dl>";
-			$("#bf-content-area").empty();
-			$("#bf-content-area").html(html);
-			$(".bg-contents").scrollTop(0);
-		})
-		.fail(function() {
-		})
-		.always(function() {
-			$(".spinner-border").hide();
-		});
+function search(id) {
+	if ($("#bf-search").val() && $("#bf-search").val().length>0) {
+		location.href='/search#' + $("#bf-search").val();
+	}
 }
 function goEdit() {
 	var id = window.location.hash.substr(1)?window.location.hash.substr(1):'';
@@ -113,6 +96,33 @@ function goHashLocation() {
 	loadContents(id);
 }
 
+function doSearch() {
+	$(".spinner-border").show();
+	$.ajax("/api/v1/ecm/search/" + q)
+		.done(function(msg) {
+			$("#bf-subject").html("검색결과");
+			var list = msg.result;
+			if (!msg || !msg.result || msg.result.length<1) {
+				$("#bf-content-area").html('<img src="/img/bg-empty.png"/>');
+			} else {
+				$("#bf-content-area").empty();
+				var html = '<dl class="bf-search-result">';
+				for (var i=0;i<list.length;i++) {
+					html += "<dt>" + list[i].title + "</dt><dd>"
+						+ '<a href="javascript:loadContents(\'' + list[i].id + '\')">' + list[i].text + "</a></dd>";
+				}
+				html += "</dl>";
+				$("#bf-content-area").html(html);
+				$(".bg-contents").scrollTop(0);
+			}
+		})
+		.fail(function() {
+		})
+		.always(function() {
+			$(".spinner-border").hide();
+		});
+}
+
 $(function(){
 	$('#tree').treeview({
 		data: tree,
@@ -121,7 +131,7 @@ $(function(){
 	$("#bf-search").keypress(function(e) {
 	    if (e.which==13){
 	    	console.log("keyword " + $(this).val());
-			search($(this).val());
+			search();
 			return false;
 	    }
 	});

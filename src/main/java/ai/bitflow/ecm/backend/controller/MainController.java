@@ -46,22 +46,31 @@ public class MainController {
 	@GetMapping("doc")
 	public String doc(Model mo) {
 //		mv.addObject("tree", eservice.getTreeString());
+		setFileTree(mo);
+		return "doc";
+	}
+	
+	private void setFileTree(Model mo) {
 		List<EsFile> list = edao.findAll();
 		for (EsFile item : list) {
 			item.setText(item.getTitle());
 		}
 		logger.debug("list" + list.toString());
 		mo.addAttribute("tree", new Gson().toJson(list));
-		return "doc";
 	}
 	
-	@RequestMapping("edit")
-	public ModelAndView editor() {
-		ModelAndView mv = new ModelAndView();
-//		mv.addObject("tree", eservice.getTreeString());
-		mv.addObject("title", "글 작성");
-		mv.setViewName("edit");
-		return mv;
+	@GetMapping("edit")
+	public String edit(Model mo) {
+		setFileTree(mo);
+		mo.addAttribute("title", "글 작성");
+		return "edit";
+	}
+	
+	@GetMapping("search")
+	public String search(Model mo) {
+		setFileTree(mo);
+		mo.addAttribute("title", "검색");
+		return "search";
 	}
 	
 	@PostMapping("put")
