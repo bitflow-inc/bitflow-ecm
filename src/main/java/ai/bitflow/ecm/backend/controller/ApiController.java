@@ -1,5 +1,6 @@
 package ai.bitflow.ecm.backend.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -57,9 +58,19 @@ public class ApiController {
 	@GetMapping("/search/{keyword}")
 	public SearchResponse search(@PathVariable String keyword) {
 		logger.debug("keyword " + keyword);
+		String[] keywords = keyword.split(" ");
 		SearchResponse ret = new SearchResponse();
-		List<EsFile> files = eservice.search(keyword);
-		ret.setResult(files);
+		List<EsFile> list = eservice.search(keyword);
+		for (EsFile item : list) {
+			for (String key : keywords) {
+				String before = item.getText();
+				item.setText(before.replaceAll("(?i)" + key, "<em>$0</em>"));
+				item.setTitle(item.getTitle().replaceAll("(?i)" + key, "<em>$0</em>"));
+				logger.debug("before " + before);
+				logger.debug("after " + item.getText());
+			}
+		}
+		ret.setResult(list);
 		return ret;
 	}
 	

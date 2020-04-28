@@ -12,6 +12,8 @@
 <style>
 html, body { height: 100%; }
 .navbar { z-index: 1; border-bottom: 1px solid #eee; }
+.bf-shadow { -moz-box-shadow: 3px 1px 3px 1px #999; -webkit-box-shadow: 3px 1px 3px 1px #999;
+    box-shadow: 3px 1px 3px 1px #999; }
 #bf-body-wrapper { height: 100%; }
 #bf-subject { font-weight: bold; float:left; margin-left: 12px; }
 .bg-contents { height: 100%; overflow-x: hidden; overflow-y: scroll; padding: 20px; }
@@ -30,7 +32,7 @@ html, body { height: 100%; }
 <body>
 
 <div id="bf-body-wrapper">
-	<nav class="navbar navbar-light bg-light">
+	<nav class="navbar navbar-light bg-light bf-shadow">
 		<a class="navbar-brand" href="/">
 			<img src="/img/ic-logo.png" height="30" class="d-inline-block align-top" alt="bitflow logo">
 			<i>ECM</i>
