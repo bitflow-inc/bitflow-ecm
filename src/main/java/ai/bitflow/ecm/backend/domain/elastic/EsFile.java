@@ -1,4 +1,4 @@
-package ai.bitflow.ecm.backend.domain;
+package ai.bitflow.ecm.backend.domain.elastic;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -17,6 +17,7 @@ public class EsFile {
 	private String id;
 	private String title;
 	private String text;
+	private String htmlcontent;
 	private String author;
 	
 }

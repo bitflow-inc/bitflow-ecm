@@ -2,7 +2,7 @@ package ai.bitflow.ecm.backend.vo.res;
 
 import java.util.List;
 
-import ai.bitflow.ecm.backend.domain.EsFile;
+import ai.bitflow.ecm.backend.domain.elastic.EsFile;
 import lombok.Data;
 
 @Data

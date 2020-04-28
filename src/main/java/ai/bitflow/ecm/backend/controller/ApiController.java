@@ -1,7 +1,6 @@
 package ai.bitflow.ecm.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ai.bitflow.ecm.backend.domain.EsFile;
-import ai.bitflow.ecm.backend.domain.TbFileTreeMap;
+import ai.bitflow.ecm.backend.domain.elastic.EsFile;
 import ai.bitflow.ecm.backend.service.EcmService;
 import ai.bitflow.ecm.backend.vo.req.ContentPutRequest;
 import ai.bitflow.ecm.backend.vo.res.ContentsResponse;
@@ -44,16 +42,14 @@ public class ApiController {
 	}
 	
 	@GetMapping("/doc/{id}")
-	public ContentsResponse doc(@PathVariable int id) {
+	public ContentsResponse doc(@PathVariable String id) {
 		ContentsResponse ret = new ContentsResponse();
-		Optional<TbFileTreeMap> file = eservice.getContents(id);
+		EsFile item = eservice.getContents(id);
 		ContentResult result = new ContentResult();
-		if (file.isPresent()) {
-			logger.debug("title " + file.get().getTitle());
-			result.setId(file.get().getId());
-			result.setTitle(file.get().getTitle());
-			result.setContents(file.get().getContent());
-		}
+		logger.debug("title " + item.getTitle());
+		result.setId(item.getId());
+		result.setTitle(item.getTitle());
+		result.setContents(item.getHtmlcontent());
 		ret.setResult(result);
 		return ret;
 	}

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ContentResult {
-	private int id;
+	private String id;
 	private String title;
 	private String contents;
 }
