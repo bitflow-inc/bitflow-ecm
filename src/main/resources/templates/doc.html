@@ -8,9 +8,28 @@
 {{#script}}	
 <script>
 $(function(){
-	var hash = window.location.hash.substr(1)?window.location.hash.substr(1):'';
-	loadContents(hash);
+	loadContentsAjax();
 });
+
+window.onhashchange = function() {
+	loadContentsAjax();
+}
+
+function loadContentsAjax() {
+	var hash = window.location.hash.substr(1)?window.location.hash.substr(1):'';
+	$("#li-" + hash).addClass("node-selected");
+	$.ajax("/api/v1/ecm/doc/" + hash)
+	.done(function(msg) {
+		$("#bf-subject").html(msg.result.title);
+		$("#bf-content-area").empty().html(msg.result.contents);
+		$(".bg-contents").scrollTop(0);
+	})
+	.fail(function() {
+	})
+	.always(function() {
+		$(".spinner-border").hide();
+	});
+}
 </script>
 {{/script}}
 {{/layout}}

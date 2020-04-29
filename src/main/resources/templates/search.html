@@ -1,0 +1,30 @@
+{{#layout}}
+
+{{#style}}
+<style>
+em { background-color: #ffff00; font-style: inherit; }
+</style>
+{{/style}}
+
+<div id="bf-content-area">
+</div>
+
+{{#script}}	
+<script>
+var q;
+$(function(){
+	q = location.hash.substr(1);
+	console.log("q " + q);
+	$("#bf-search").val(decodeURIComponent(q));
+	doSearch();
+});
+
+window.onhashchange = function() {
+	q = location.hash.substr(1);
+	console.log("q " + q);
+	$("#bf-search").val(decodeURIComponent(q));
+	doSearch();
+}
+</script>
+{{/script}}
+{{/layout}}

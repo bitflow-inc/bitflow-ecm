@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ai.bitflow.ecm.backend.dao.FileDao;
 import ai.bitflow.ecm.backend.domain.elastic.EsFile;
-import ai.bitflow.ecm.backend.repository.elastic.ElasticRepository;
+import ai.bitflow.ecm.backend.repository.elastic.ContentsRepository;
 import ai.bitflow.ecm.backend.vo.req.ContentPutRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ public class EcmService {
 	private FileDao fdao;
 	
 	@Autowired
-	private ElasticRepository erepo;
+	private ContentsRepository erepo;
 	
 	/**
 	 * title, path, ext, isDir
