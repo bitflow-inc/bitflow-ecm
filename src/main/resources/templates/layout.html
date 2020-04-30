@@ -8,30 +8,10 @@
 <link href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="/css/bootstrap-treeview.min.css" rel="stylesheet" type="text/css">
 <link href="/synapeditor/synapeditor.min.css" rel="stylesheet" type="text/css">
-{{{layout.style}}}
+<link href="/css/custom.css" rel="stylesheet" type="text/css">
 <style>
-html, body { height: 100%; }
-.spinner-border { border-color: lightgray; }
-.navbar { z-index: 1; border-bottom: 1px solid #eee; }
-.bf-shadow { -moz-box-shadow: 3px 1px 3px 1px #999; -webkit-box-shadow: 3px 1px 3px 1px #999;
-    box-shadow: 3px 1px 3px 1px #999; }
-#bf-body-wrapper { height: 100%; }
-#bf-subject { font-weight: bold; float:left; margin-left: 12px; }
-.bg-contents { height: 100%; overflow-x: hidden; overflow-y: scroll; padding: 20px; }
-#bf-nav-below { position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding-top: 56px;
-	overflow: hidden; margin: 0; }
-.bf-menu-section { padding: 0; background-color: #f3f3f3; }
-.bg-contents > hr { clear: both; }
-.bf-search-result dd { font-size: 0.7em; max-height: 50px; overflow: hidden; }
-#bf-subject-input { margin-bottom: 12px; }
-.spinner-border { position: fixed; z-index: 999; width: 3rem; height: 3rem; 
-	overflow: visible; margin: auto; top: 0; left: 0; bottom: 0; right: 0; }
-.list-group-item, .ellipsis { width: 100%; overflow: hidden; word-break: break-all; white-space: nowrap;
-   text-overflow: ellipsis; }
-.node-selected { color:#FFFFFF;background-color:#428bca; }
-#btn-create { width: 100%; }
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { line-height: 1.3; }
 </style>
+{{{layout.style}}}
 <script src="/synapeditor/synapeditor.config.js"></script>
 </head>
 <body>
@@ -40,13 +20,12 @@ html, body { height: 100%; }
 	<nav class="navbar navbar-light bg-light bf-shadow">
 		<a class="navbar-brand" href="/">
 			<img src="/img/ic-logo.png" height="30" class="d-inline-block align-top" alt="bitflow logo">
-			<i>ECM</i>
 		</a>
 		<form class="form-inline">
 			<input id="bf-search" class="form-control mr-sm-2" type="text" placeholder="검색어 입력" aria-label="Search"/>
-			<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="search();">검색</button>
+			<button id="btn-search" class="btn btn-outline-secondary my-2 my-sm-0" type="button" onclick="search();">검색</button>
+			<button class="btn btn-info my-2 my-sm-0" onclick="goEdit();" style="margin-left: 12px;">글쓰기</button>
 		</form>
-		<button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="goEdit();">글쓰기</button>
 	</nav>
 	
 	<div id="bf-nav-below" class="row">
@@ -60,6 +39,8 @@ html, body { height: 100%; }
 
 </div>
 
+<div id="snackbar"></div>
+
 <div class="spinner-border" role="status" style="display: none;">
   <span class="sr-only">Loading...</span>
 </div>
@@ -69,6 +50,12 @@ html, body { height: 100%; }
 <script src="/js/bootstrap-treeview.min.js"></script>
 <script>
 var tree = {{#tree}}{{{tree}}}{{/tree}}{{^tree}}[]{{/tree}};
+window.alert = function(message) {
+	var x = document.getElementById("snackbar");
+	x.className = "show";
+	x.innerText = message;
+	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
 function loadContents(id) {
 	$(".spinner-border").show();
 	location.href = "/doc#" + id;

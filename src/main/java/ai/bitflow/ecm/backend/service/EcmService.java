@@ -65,6 +65,16 @@ public class EcmService {
 		Optional<EsFile> row = erepo.findById(id);
 		return row.isPresent()?row.get():null;
 	}
+	
+	@Transactional
+	public boolean deleteContent(String id) {
+		Optional<EsFile> row = erepo.findById(id);
+		if (row.isPresent()) {
+			EsFile item = row.get();
+			erepo.delete(item);
+		}
+		return true;
+	}
 
 //	public String getTreeString() {
 //		List<TbFileTreeMap> rawtree = getTree();

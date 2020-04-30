@@ -1,14 +1,33 @@
 {{#layout}}
 
-<div><h2 id="bf-subject" class="ellipsis"></h2></div>
-<hr>
+<div id="bf-subject-wrapper" class="row">
+    <div class="col-10">
+		<h2 id="bf-subject" class="ellipsis"></h2>
+    </div>
+    <div class="col-2">
+   		<button id="btn-delete" class="btn btn-outline-secondary my-2 my-sm-0">삭제</button>
+		<button id="btn-modify" class="btn btn-warning my-2 my-sm-0">수정</button>
+    </div>
+    <hr>
+</div>
 <div id="bf-content-area">
 </div>
 
 {{#script}}	
 <script>
 $(function(){
-	loadContentsAjax();
+	$("#btn-delete").click(function() {
+		deleteContentAjax();
+	});
+	$("#btn-modify").click(function() {
+		alert("작업중입니다");
+	});
+	if (window.location.hash) {
+		loadContentsAjax();
+	} else {
+		$("#bf-subject-wrapper").hide();
+		$("#bf-content-area").html('<img src="/img/bg-empty.png"/>');
+	}
 });
 
 window.onhashchange = function() {
@@ -16,6 +35,7 @@ window.onhashchange = function() {
 }
 
 function loadContentsAjax() {
+	$("#bf-subject-wrapper").css("display", "flex");
 	var hash = window.location.hash.substr(1)?window.location.hash.substr(1):'';
 	$("#li-" + hash).addClass("node-selected");
 	$.ajax("/api/v1/ecm/doc/" + hash)
@@ -30,6 +50,23 @@ function loadContentsAjax() {
 		$(".spinner-border").hide();
 	});
 }
+
+function deleteContentAjax() {
+	var hash = window.location.hash.substr(1)?window.location.hash.substr(1):'';
+	$.ajax({
+		url: "/api/v1/ecm/doc/" + hash,
+		type : "DELETE"
+	})
+	.done(function(msg) {
+		location.href = "/doc";
+	})
+	.fail(function() {
+	})
+	.always(function() {
+		$(".spinner-border").hide();
+	});
+}
+
 </script>
 {{/script}}
 {{/layout}}
