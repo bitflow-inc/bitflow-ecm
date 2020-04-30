@@ -46,11 +46,17 @@ public class MainController {
 	
 	@GetMapping("edit")
 	public String edit(Model mo) {
-		eservice.getFileTree();
+		String treeStr = eservice.getFileTree();
+		mo.addAttribute("tree", treeStr);
 		mo.addAttribute("title", "글 작성");
 		return "edit";
 	}
 	
+	/**
+	 * 검색
+	 * @param mo
+	 * @return
+	 */
 	@GetMapping("search")
 	public String search(Model mo) {
 		String treeStr = eservice.getFileTree();
@@ -59,6 +65,11 @@ public class MainController {
 		return "search";
 	}
 	
+	/**
+	 * 글등록
+	 * @param params
+	 * @return
+	 */
 	@PostMapping("doc")
 	public ModelAndView createDoc(NewContentRequest params) {
 		ModelAndView mv = new ModelAndView();

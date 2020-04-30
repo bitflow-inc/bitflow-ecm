@@ -1,4 +1,5 @@
 html, body { height: 100%; }
+a:hover { text-decoration: none; }
 .spinner-border { border-color: lightgray; }
 .navbar { z-index: 1; border-bottom: 1px solid #eee; }
 .bf-shadow { -moz-box-shadow: 3px 1px 3px 1px #999; -webkit-box-shadow: 3px 1px 3px 1px #999;
@@ -35,6 +36,8 @@ html, body { height: 100%; }
   -moz-box-shadow: 3px 3px 5px -3px rgba(102,102,102,0.7);
   box-shadow: 3px 3px 5px -3px rgba(102,102,102,0.7);
 }
+.icon.fas { color: #0077cc; }
+#file-btns-wrapper, #folder-btns-wrapper { text-align: right; }
 #snackbar {
   visibility: hidden; /* Hidden by default. Visible on click */
   min-width: 250px; /* Set a default minimum width */
