@@ -17,7 +17,14 @@ public class FileTree {
 	
 	@Id
 	private String id;
-	private String title;
-	private List<FileTree> child;
+	private String text;
+	private List<FileTree> nodes;
+	private Boolean directory;
+	private State state = new State();
+	
+	@Data
+	public class State {
+		private Boolean expanded = false; 
+	}
 	
 }

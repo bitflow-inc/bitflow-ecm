@@ -15,8 +15,8 @@ public class EsFile {
 	
 	@Id
 	private String id;
-	private String title;
 	private String text;
+	private String summary;
 	private String htmlcontent;
 	private String author;
 	

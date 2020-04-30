@@ -1,23 +1,20 @@
 package ai.bitflow.ecm.backend.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
-import ai.bitflow.ecm.backend.dao.ElasticDao;
-import ai.bitflow.ecm.backend.domain.elastic.EsFile;
 import ai.bitflow.ecm.backend.service.EcmService;
-import ai.bitflow.ecm.backend.vo.req.ContentPutRequest;
+import ai.bitflow.ecm.backend.vo.req.NewContentRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,9 +31,6 @@ public class MainController {
 	@Autowired
 	private EcmService eservice;
 	
-	@Autowired
-	private ElasticDao edao;
-	
 	
 	@GetMapping("") 
 	public String index() {
@@ -45,41 +39,42 @@ public class MainController {
 	
 	@GetMapping("doc")
 	public String doc(Model mo) {
-//		mv.addObject("tree", eservice.getTreeString());
-		setFileTree(mo);
+		String treeStr = eservice.getFileTree();
+		mo.addAttribute("tree", treeStr);
 		return "doc";
-	}
-	
-	private void setFileTree(Model mo) {
-		List<EsFile> list = edao.findAll();
-		for (EsFile item : list) {
-			item.setText(item.getTitle());
-		}
-		logger.debug("list" + list.toString());
-		mo.addAttribute("tree", new Gson().toJson(list));
 	}
 	
 	@GetMapping("edit")
 	public String edit(Model mo) {
-		setFileTree(mo);
+		eservice.getFileTree();
 		mo.addAttribute("title", "글 작성");
 		return "edit";
 	}
 	
 	@GetMapping("search")
 	public String search(Model mo) {
-		setFileTree(mo);
+		String treeStr = eservice.getFileTree();
+		mo.addAttribute("tree", treeStr);
 		mo.addAttribute("title", "검색");
 		return "search";
 	}
 	
-	@PostMapping("put")
-	public ModelAndView put(ContentPutRequest params) {
+	@PostMapping("doc")
+	public ModelAndView createDoc(NewContentRequest params) {
 		ModelAndView mv = new ModelAndView();
 		String id = eservice.saveFile(params);
-		mv.setViewName("redirect:doc#" + id);
+		mv.setViewName("redirect:/doc#" + id);
 		return mv;
 	}
+	
+	@PostMapping("/doc/{parentid}")
+	public ModelAndView createChildDoc(NewContentRequest params, @PathVariable String parentid) {
+		ModelAndView mv = new ModelAndView();
+		String id = eservice.saveFile(params, parentid);
+		mv.setViewName("redirect:/doc#" + id);
+		return mv;
+	}
+	
 	
 //	@GetMapping("doc/{id}")
 //	public ModelAndView docWithId(@PathVariable int id) {

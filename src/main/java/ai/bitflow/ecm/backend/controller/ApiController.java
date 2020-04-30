@@ -1,6 +1,5 @@
 package ai.bitflow.ecm.backend.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ai.bitflow.ecm.backend.domain.elastic.EsFile;
+import ai.bitflow.ecm.backend.domain.elastic.FileTree;
 import ai.bitflow.ecm.backend.service.EcmService;
-import ai.bitflow.ecm.backend.vo.req.ContentPutRequest;
+import ai.bitflow.ecm.backend.vo.req.NewContentRequest;
 import ai.bitflow.ecm.backend.vo.res.ContentsResponse;
 import ai.bitflow.ecm.backend.vo.res.GeneralResponse;
 import ai.bitflow.ecm.backend.vo.res.SearchResponse;
@@ -36,10 +37,52 @@ public class ApiController {
 	@Autowired
 	private EcmService eservice;
 	
-	@PutMapping("put")
-	public GeneralResponse put(ContentPutRequest params) {
+//	@PostMapping("/doc")
+//	public GeneralResponse doc(NewContentRequest params) {
+//		logger.debug("params " + params.toString());
+//		GeneralResponse ret = new GeneralResponse();
+//		if (params.getDirectory()!=null && params.getDirectory()) {
+//			String id = eservice.saveFile(params);
+//			logger.debug("filetree " + item.toString());
+//		} else {
+//			eservice.saveFile(params);
+//		}
+//		return ret;
+//	}
+	
+//	@PostMapping("/doc/{parentid}")
+//	public GeneralResponse childDoc(NewContentRequest params, @PathVariable String parentid) {
+//		logger.debug("params " + params.toString());
+//		GeneralResponse ret = new GeneralResponse();
+//		if (params.getDirectory()!=null && params.getDirectory()) {
+//			FileTree item = eservice.saveFile(params, parentid);
+//			logger.debug("filetree " + item.toString());
+//		} else {
+//			eservice.saveFile(params);
+//		}
+//		return ret;
+//	}
+	
+	@PostMapping("/folder")
+	public GeneralResponse folder(NewContentRequest params) {
+		logger.debug("params " + params.toString());
 		GeneralResponse ret = new GeneralResponse();
-		eservice.saveFile(params);
+		if (params.getDirectory()!=null && params.getDirectory()) {
+			FileTree item = eservice.saveDirectory(params);
+			logger.debug("filetree " + item.toString());
+		} else {
+			eservice.saveFile(params);
+		}
+		return ret;
+	}
+	
+	@PostMapping("/folder/{parentid}")
+	public GeneralResponse childFolder(NewContentRequest params, @PathVariable String parentid) {
+		logger.debug("params " + params.toString());
+		GeneralResponse ret = new GeneralResponse();
+		if (params.getDirectory()!=null && params.getDirectory()) {
+			boolean success = eservice.saveDirectory(params, parentid);
+		}
 		return ret;
 	}
 	
@@ -48,10 +91,14 @@ public class ApiController {
 		ContentsResponse ret = new ContentsResponse();
 		EsFile item = eservice.getContents(id);
 		ContentResult result = new ContentResult();
-		logger.debug("title " + item.getTitle());
-		result.setId(item.getId());
-		result.setTitle(item.getTitle());
-		result.setContents(item.getHtmlcontent());
+		if (item!=null) {
+			logger.debug("title " + item.getText());
+			result.setId(item.getId());
+			result.setTitle(item.getText());
+			result.setContents(item.getHtmlcontent());
+		} else {
+			ret.setFailResponse(404);
+		}
 		ret.setResult(result);
 		return ret;
 	}
@@ -69,14 +116,15 @@ public class ApiController {
 		String[] keywords = keyword.split(" ");
 		SearchResponse ret = new SearchResponse();
 		List<EsFile> list = eservice.search(keyword);
+//		logger.debug("list " + list.toString());
 		for (EsFile item : list) {
+			String summary = item.getSummary();
+			if (summary==null) { continue; }
 			for (String key : keywords) {
-				String before = item.getText();
-				item.setText(before.replaceAll("(?i)" + key, "<em>$0</em>"));
-				item.setTitle(item.getTitle().replaceAll("(?i)" + key, "<em>$0</em>"));
-				logger.debug("before " + before);
-				logger.debug("after " + item.getText());
+				summary = summary.replaceAll("(?i)" + key, "<em>$0</em>");
 			}
+			item.setSummary(summary);
+			item.setHtmlcontent(null);
 		}
 		ret.setResult(list);
 		return ret;

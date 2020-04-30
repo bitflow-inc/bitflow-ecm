@@ -9,7 +9,9 @@
 <link href="/css/bootstrap-treeview.min.css" rel="stylesheet" type="text/css">
 <link href="/synapeditor/synapeditor.min.css" rel="stylesheet" type="text/css">
 <link href="/css/custom.css" rel="stylesheet" type="text/css">
+<link href="/fontawesome5/css/all.css" rel="stylesheet">
 <style>
+.inner-shadow { box-shadow: inset 1px 1px 2px grey; }
 </style>
 {{{layout.style}}}
 <script src="/synapeditor/synapeditor.config.js"></script>
@@ -22,9 +24,8 @@
 			<img src="/img/ic-logo.png" height="30" class="d-inline-block align-top" alt="bitflow logo">
 		</a>
 		<form class="form-inline">
-			<input id="bf-search" class="form-control mr-sm-2" type="text" placeholder="검색어 입력" aria-label="Search"/>
+			<input id="bf-search" class="form-control mr-sm-2 inner-shadow" type="text" placeholder="검색어 입력" aria-label="Search"/>
 			<button id="btn-search" class="btn btn-outline-secondary my-2 my-sm-0" type="button" onclick="search();">검색</button>
-			<button class="btn btn-info my-2 my-sm-0" onclick="goEdit();" style="margin-left: 12px;">글쓰기</button>
 		</form>
 	</nav>
 	
@@ -37,6 +38,27 @@
 	    </div>
 	</div>
 
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="bf-modal-folder" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">폴더 생성</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<input type="text" id="folder-name" class="form-control mr-sm-2" placeholder="폴더명 입력" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">취소</button>
+        <button id="btn-create-folder" type="button" class="btn btn-primary">생성</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="snackbar"></div>
@@ -60,10 +82,17 @@ function loadContents(id) {
 	$(".spinner-border").show();
 	location.href = "/doc#" + id;
 }
-function onTreeItemClick(event, data) {
+function onTreeItemClick(e, data) {
 	console.log("onTreeItemClick " + JSON.stringify(data));
 	location.href = "/doc#" + data.id;
-	loadContents(data.id);
+	if (data.directory==false) {
+		$("#folder-btns-wrapper").hide();
+		$("#file-btns-wrapper").show();
+		loadContents(data.id);
+	} else {
+		$("#file-btns-wrapper").hide();
+		$("#folder-btns-wrapper").show();
+	}
 }
 function search(id) {
 	if ($("#bf-search").val() && $("#bf-search").val().length>0) {
@@ -79,6 +108,25 @@ function goHashLocation() {
 	loadContents(id);
 }
 
+function doCreateFolder() {
+	var parentid = window.location.hash.substr(1)?"/" + window.location.hash.substr(1):'';
+	var foldername = $("#folder-name").val();
+	console.log("foldername " + foldername);
+	$.ajax({
+		url : "/api/v1/ecm/folder" + parentid,
+		type: "post",
+		dataType: "json",
+		data: { text: foldername, directory: true }
+	})
+	.done(function(msg) {
+		location.reload();
+	})
+	.fail(function() {
+	})
+	.always(function() {
+	});
+}
+
 function doSearch() {
 	$(".spinner-border").show();
 	$.ajax("/api/v1/ecm/search/" + q)
@@ -91,8 +139,8 @@ function doSearch() {
 				$("#bf-content-area").empty();
 				var html = '<dl class="bf-search-result">';
 				for (var i=0;i<list.length;i++) {
-					html += "<dt>" + list[i].title + "</dt><dd>"
-						+ '<a href="javascript:loadContents(\'' + list[i].id + '\')">' + list[i].text + "</a></dd>";
+					html += "<dt>" + list[i].text + "</dt><dd>"
+						+ '<a href="javascript:loadContents(\'' + list[i].id + '\')">' + list[i].summary + "</a></dd>";
 				}
 				html += "</dl>";
 				$("#bf-content-area").html(html);
@@ -118,13 +166,22 @@ $(function(){
 			return false;
 	    }
 	});
-	$("#btn-create").click(function() {
-		document.frm.submit();
+	$("#btn-folder-modal").click(function(e) {
+		$('#bf-modal-folder').modal();
+		e.stopPropagation();
+		e.preventDefault();
 	});
+	$("#btn-write").click(function() {
+		goEdit();
+	});
+	$("#btn-create-folder").click(function() {
+		doCreateFolder();
+	});
+	/* $(".bf-menu-section").click(function() {
+		location.href = "";
+	}); */
 });
 </script>
-<script src="/synapeditor/synapeditor.config.js"></script>
-<script src="/synapeditor/synapeditor.min.js"></script>
 {{{layout.script}}}
 </body>
 </html>
