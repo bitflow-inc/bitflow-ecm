@@ -1,22 +1,36 @@
 {{#layout}}
 
-<h1 id="bf-subject">글쓰기</h1>
-<button id="btn-create" class="btn btn-outline-success my-2 my-sm-0" type="submit">등록</button>
-<hr>
+{{#style}}
+<style>
+#bf-content-area, #synapEditor, #new_synapEditor { width: 100%; height: 100%; min-height: 480px; }
+#btn-create { float: right; }
+</style>
+<script>
+function initEditor() {
+    new SynapEditor('synapEditor', synapEditorConfig);
+}
+window.onload = function() {
+	initEditor();
+}
+</script>
+{{/style}}
 <div id="bf-content-area">
-	<form id="frm" name="frm" action="/put" method="post">
-		<input id="bf-subject-input" name="title" placeholder="제목을 입력하세요" class="form-control form-control-lg" type="text" placeholder=".form-control-lg">
-		<textarea id="synapEditor" name="content"></textarea>
-	</form>
+  <form id="frm" name="frm" action="/put" method="post">
+	<div class="row">
+	    <div class="col-10">
+			<input id="bf-subject-input" name="title" placeholder="제목을 입력하세요" class="form-control form-control-lg" type="text" placeholder=".form-control-lg">
+	    </div>
+	    <div class="col-2">
+			<button id="btn-create" class="btn btn-success my-2 my-sm-0" type="submit">등록</button>
+	    </div>
+	</div>
+	<textarea id="synapEditor" name="content"></textarea>
+  </form>
 </div>
 
 {{#script}}
 <script>
-function initEditor() {
-    var se = new SynapEditor("synapEditor", synapEditorConfig);
-}
 $(function() {
-	initEditor();
 })
 </script>
 {{/script}}

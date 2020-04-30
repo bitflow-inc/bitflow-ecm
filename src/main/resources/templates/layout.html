@@ -11,6 +11,7 @@
 {{{layout.style}}}
 <style>
 html, body { height: 100%; }
+.spinner-border { border-color: lightgray; }
 .navbar { z-index: 1; border-bottom: 1px solid #eee; }
 .bf-shadow { -moz-box-shadow: 3px 1px 3px 1px #999; -webkit-box-shadow: 3px 1px 3px 1px #999;
     box-shadow: 3px 1px 3px 1px #999; }
@@ -19,16 +20,19 @@ html, body { height: 100%; }
 .bg-contents { height: 100%; overflow-x: hidden; overflow-y: scroll; padding: 20px; }
 #bf-nav-below { position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding-top: 56px;
 	overflow: hidden; margin: 0; }
-.bf-menu-section { padding: 0; }
+.bf-menu-section { padding: 0; background-color: #f3f3f3; }
 .bg-contents > hr { clear: both; }
 .bf-search-result dd { font-size: 0.7em; max-height: 50px; overflow: hidden; }
 #bf-subject-input { margin-bottom: 12px; }
 .spinner-border { position: fixed; z-index: 999; width: 3rem; height: 3rem; 
 	overflow: visible; margin: auto; top: 0; left: 0; bottom: 0; right: 0; }
-.list-group-item { overflow-x: hidden; word-break: break-all; white-space: nowrap;
+.list-group-item, .ellipsis { width: 100%; overflow: hidden; word-break: break-all; white-space: nowrap;
    text-overflow: ellipsis; }
 .node-selected { color:#FFFFFF;background-color:#428bca; }
+#btn-create { width: 100%; }
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { line-height: 1.3; }
 </style>
+<script src="/synapeditor/synapeditor.config.js"></script>
 </head>
 <body>
 
@@ -46,10 +50,10 @@ html, body { height: 100%; }
 	</nav>
 	
 	<div id="bf-nav-below" class="row">
-	    <div class="col-3 bf-menu-section">
+	    <div class="col-2 bf-menu-section">
 	    	<div id="tree"></div>
 	    </div>
-	    <div class="col-9 bg-contents" id="bf-contents">
+	    <div class="col-10 bg-contents" id="bf-contents">
 	   		{{{layout.body}}}
 	    </div>
 	</div>
