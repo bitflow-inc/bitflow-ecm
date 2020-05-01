@@ -18,24 +18,42 @@
 </head>
 <body>
 
-<div id="bf-body-wrapper">
-	<nav class="navbar navbar-light bg-light bf-shadow">
+<header>
+	<nav class="navbar navbar-expand-md fixed-top justify-content-between navbar-light bg-light bf-shadow">
 		<a class="navbar-brand" href="/">
 			<img src="/img/ic-logo.png" height="30" class="d-inline-block align-top" alt="bitflow logo">
 		</a>
-		<form class="form-inline">
-			<input id="bf-search" class="form-control mr-sm-2" type="text" placeholder="검색어 입력" aria-label="Search"/>
-			<button id="btn-search" class="btn btn-outline-secondary my-2 my-sm-0" type="button" onclick="search();">
-			<i class="fas fa-search"></i>
-			</button>
-		</form>
+		<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="navbar-collapse collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto nav nav-pills">
+	            <li class="nav-item">
+	              <a class="nav-link active" href="#">화면 도움말 <span class="sr-only">(current)</span></a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#">영웅문 100% 이용하기</a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#">영웅문 길라잡이</a>
+	            </li>
+	          </ul>
+			<form id="bf-search-wrapper" class="form-inline mt-2 mt-md-0">
+				<input id="bf-search" class="form-control mr-sm-2" type="text" placeholder="검색어 입력" aria-label="Search"/>
+				<button id="btn-search" class="btn btn-outline-secondary my-2 my-sm-0" type="button" onclick="search();">
+				<i class="fas fa-search"></i>
+				</button>
+			</form>
+		</div>
 	</nav>
-	
+</header>
+
+<div id="bf-body-wrapper">
 	<div id="bf-nav-below" class="row">
-	    <div class="col-2 bf-menu-section">
+	    <div class="col-md-3 bf-menu-section">
 	    	<div id="tree"></div>
 	    </div>
-	    <div class="col-10 bg-contents" id="bf-contents">
+	    <div class="col-md-9 bg-contents" id="bf-contents">
 	   		{{{layout.body}}}
 	    </div>
 	</div>
@@ -85,7 +103,7 @@ function loadContents(id) {
 	location.href = "/doc#" + id;
 }
 function onTreeItemClick(e, data) {
-	console.log("onTreeItemClick " + JSON.stringify(data));
+	// console.log("onTreeItemClick " + JSON.stringify(data));
 	location.href = "/doc#" + data.id;
 	if (data.directory==false) {
 		$("#folder-btns-wrapper").hide();
@@ -161,6 +179,13 @@ $(function(){
 		data: tree,
 		onNodeSelected: onTreeItemClick
 	});
+	if (window.location.hash) {
+		console.log('nodeid ' + window.location.hash.substr(1));
+		/* var selectednode = $('#tree').treeview('getNode', window.location.hash.substr(1));
+		console.log('selectednode ' + JSON.stringify(selectednode));
+		$('#tree').treeview('expandNode', selectednode); */
+		$('#tree').treeview('revealNode', [ window.location.hash.substr(1) ]);
+	}
 	$("#bf-search").keypress(function(e) {
 	    if (e.which==13){
 	    	console.log("keyword " + $(this).val());

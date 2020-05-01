@@ -25,6 +25,7 @@ public class FileTree {
 	@Data
 	public class State {
 		private Boolean expanded = false; 
+		private Boolean selected = false; 
 	}
 	
 }
