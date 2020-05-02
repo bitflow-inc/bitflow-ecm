@@ -43,7 +43,9 @@ a:hover { text-decoration: none; }
   box-shadow: 3px 3px 5px -3px rgba(102,102,102,0.7);
 }
 .dropdown-menu .divider { background-color: transparent; border-bottom: 1px solid #e5e5e5; }
-
+#bf-menu-header { height: 32px; background-color: #f3f3f3; padding: 9px 12px; }
+#bf-menu-header > i { float: right; font-size: 18px; cursor: pointer; }
+#bf-menu-header i+i { margin-right: 6px; }
 .list-group-item .icon { color: #0077cc; }
 #file-btns-wrapper, #folder-btns-wrapper { text-align: right; }
 #snackbar {

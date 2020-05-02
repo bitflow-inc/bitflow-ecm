@@ -30,16 +30,16 @@
 		</button>
 		<div class="navbar-collapse collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto nav nav-pills">
-	            <li class="nav-item">
-	              <a class="nav-link active" href="#">화면 도움말 <span class="sr-only">(current)</span></a>
-	            </li>
-	            <li class="nav-item">
-	              <a class="nav-link" href="#">영웅문 100% 이용하기</a>
-	            </li>
-	            <li class="nav-item">
-	              <a class="nav-link" href="#">영웅문 길라잡이</a>
-	            </li>
-	          </ul>
+        <li class="nav-item">
+          <a class="nav-link active" href="#">화면 도움말 <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">영웅문 100% 이용하기</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">영웅문 길라잡이</a>
+        </li>
+      </ul>
 			<form id="bf-search-wrapper" class="form-inline mt-2 mt-md-0">
 				<input id="bf-search" class="form-control mr-sm-2" type="text" placeholder="검색어 입력" aria-label="Search"/>
 				<button id="btn-search" class="btn btn-outline-secondary my-2 my-sm-0" type="button" onclick="search();">
@@ -53,6 +53,9 @@
 <div id="bf-body-wrapper">
 	<div id="bf-nav-below" class="row">
 	    <div class="col-md-3 bf-menu-section">
+	    	<div id="bf-menu-header">
+	    		<i class="far fa-minus-square"></i><i class="far fa-plus-square"></i>
+    		</div>
 	    	<div id="tree"></div>
 	    </div>
 	    <div class="col-md-9 bg-contents" id="bf-contents">
@@ -188,7 +191,24 @@ function doSearch() {
 			$(".spinner-border").hide();
 		});
 }
-	
+
+function getElementsByClassName(className) {
+	var bodyHtml = document.body; 
+	var bin = []
+	var check = function(bodyHtml) {
+		if(bodyHtml.classList && bodyHtml.classList.contains(className)) {
+			bin.push(bodyHtml);
+		}
+		if(bodyHtml.hasChildNodes()) {
+			for(var i = 0; i< bodyHtml.childNodes.length; i++) {
+				check(bodyHtml.childNodes[i]);
+			}
+		}
+	}
+	check(bodyHtml);
+	return bin;
+}
+
 $(function(){
 	$('#tree').treeview({
 		data: tree,
@@ -216,9 +236,6 @@ $(function(){
 	$("#btn-create-folder").click(function() {
 		doCreateFolder();
 	});
-/* 	$('#tree').contextmenu({
-		target: "#context-menu"
-	}); */
 	context.init({
 		fadeSpeed: 100,
 		filter: function($obj){},
@@ -227,12 +244,22 @@ $(function(){
 		compress: false
 	});
 	context.attach('#tree', [
-			{text: '새 폴더', href: '#'},
-			{text: '새 게시물', href: '#'},
-			{text: '수정', href: '#'},
-			{text: '삭제', href: '#'}
-		]);
+		{text: '새 폴더', href: '#'},
+		{text: '새 게시물', href: '#'},
+		{divider: true},
+		{text: '이름변경', href: '#'},
+		{text: '수정', href: '#'},
+		{text: '삭제', href: '#'}
+	]);
+	context.attach('.bf-menu-section', [
+		{text: '새 폴더', href: '#'},
+		{text: '새 게시물', href: '#'},
+	]);
+	$(".dropdown-context").contextmenu(function(e) {
+		e.preventDefault(); // 원래 있던 오른쪽 마우스 이벤트를 무효화한다.
+	});
 });
+
 </script>
 {{{layout.script}}}
 </body>
