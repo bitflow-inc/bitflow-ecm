@@ -11,7 +11,7 @@ a:hover { text-decoration: none; }
 #bf-nav-below { position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding-top: 56px;
 	overflow: hidden; margin: 0; }
 .treeview { background-color: white; padding: 12px 6px; }
-.bf-menu-section { padding: 0; background-color: white; }
+.bf-menu-section { padding: 0; background-color: white; border-right: 1px solid #ccc; }
 .bg-contents > hr { clear: both; }
 .bf-search-result dd { font-size: 0.7em; max-height: 50px; overflow: hidden;  }
 #bf-subject-input { margin-bottom: 12px; }
@@ -24,10 +24,10 @@ a:hover { text-decoration: none; }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { line-height: 1.3; }
 #bf-subject-wrapper { display: flex; }
 #bf-subject-wrapper > hr { clear: both; width: 100%; margin-top: 0.5rem; }
-.treeview .list-group-item { height: 22px; padding: 0 2px; border: 0; font-size: 12px; border-radius: 2px; }
+.treeview .list-group-item { height: 22px; padding: 0 2px; border: 0; font-size: 14px; border-radius: 2px; }
 .treeview .list-group-item:hover { color: #666; }
 .btn, .form-control { border-color: #6c757d; }
-.navbar-nav { margin-top: 8px; }
+.navbar-nav { margin-top: 8px; margin: 0 auto !important; }
 .navbar-nav .nav-link { padding-left: 12px; }
 .navbar-light .navbar-nav .nav-link.active { color: white; background-color: #7ecef4; border: 1px solid #666; }
 #bf-search { border-radius: 6px 0 0 6px; margin-right: -1px !important; border-color: #6c757d; width: inherit; }
@@ -42,7 +42,9 @@ a:hover { text-decoration: none; }
   -moz-box-shadow: 3px 3px 5px -3px rgba(102,102,102,0.7);
   box-shadow: 3px 3px 5px -3px rgba(102,102,102,0.7);
 }
-.icon.fas { color: #0077cc; }
+.dropdown-menu .divider { background-color: transparent; border-bottom: 1px solid #e5e5e5; }
+
+.list-group-item .icon { color: #0077cc; }
 #file-btns-wrapper, #folder-btns-wrapper { text-align: right; }
 #snackbar {
   visibility: hidden; /* Hidden by default. Visible on click */

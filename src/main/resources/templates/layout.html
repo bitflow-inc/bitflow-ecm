@@ -8,8 +8,10 @@
 <link href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="/css/bootstrap-treeview.min.css" rel="stylesheet" type="text/css">
 <link href="/synapeditor/synapeditor.min.css" rel="stylesheet" type="text/css">
+<link href="/css/context.standalone.css" rel="stylesheet" type="text/css">
+<link href="/fontawesome5/css/all.css" rel="stylesheet" type="text/css">
 <link href="/css/custom.css" rel="stylesheet" type="text/css">
-<link href="/fontawesome5/css/all.css" rel="stylesheet">
+
 <style>
 .inner-shadow { box-shadow: inset 1px 1px 2px grey; }
 </style>
@@ -83,6 +85,18 @@
 
 <div id="snackbar"></div>
 
+<div id="context-menu" style="display:none"> 
+  <ul class="dropdown-menu">
+    <li><a href="#">Action 1</a></li>
+    <li><a href="#">Action 2</a></li>
+    <li><a href="#">Action 3</a></li>
+    <li class="divider"></li>
+    <li><a href="#">Action 4</a></li>
+    <li><a href="#">Action 5</a></li>
+    <li><a href="#">Action 6</a></li>
+  </ul>
+</div>
+
 <div class="spinner-border" role="status" style="display: none;">
   <span class="sr-only">Loading...</span>
 </div>
@@ -90,6 +104,7 @@
 <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="/js/bootstrap-treeview.min.js"></script>
+<script src="/js/context.js"></script>
 <script>
 var tree = {{#tree}}{{{tree}}}{{/tree}}{{^tree}}[]{{/tree}};
 window.alert = function(message) {
@@ -173,7 +188,7 @@ function doSearch() {
 			$(".spinner-border").hide();
 		});
 }
-
+	
 $(function(){
 	$('#tree').treeview({
 		data: tree,
@@ -181,9 +196,6 @@ $(function(){
 	});
 	if (window.location.hash) {
 		console.log('nodeid ' + window.location.hash.substr(1));
-		/* var selectednode = $('#tree').treeview('getNode', window.location.hash.substr(1));
-		console.log('selectednode ' + JSON.stringify(selectednode));
-		$('#tree').treeview('expandNode', selectednode); */
 		$('#tree').treeview('revealNode', [ window.location.hash.substr(1) ]);
 	}
 	$("#bf-search").keypress(function(e) {
@@ -204,9 +216,22 @@ $(function(){
 	$("#btn-create-folder").click(function() {
 		doCreateFolder();
 	});
-	/* $(".bf-menu-section").click(function() {
-		location.href = "";
+/* 	$('#tree').contextmenu({
+		target: "#context-menu"
 	}); */
+	context.init({
+		fadeSpeed: 100,
+		filter: function($obj){},
+		above: 'auto', 
+		preventDoubleContext: false, 
+		compress: false
+	});
+	context.attach('#tree', [
+			{text: '새 폴더', href: '#'},
+			{text: '새 게시물', href: '#'},
+			{text: '수정', href: '#'},
+			{text: '삭제', href: '#'}
+		]);
 });
 </script>
 {{{layout.script}}}
