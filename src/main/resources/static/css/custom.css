@@ -48,6 +48,7 @@ a:hover { text-decoration: none; }
 #bf-menu-header i+i { margin-right: 6px; }
 .list-group-item .icon { color: #0077cc; }
 #file-btns-wrapper, #folder-btns-wrapper { text-align: right; }
+#tree { height: 100%; }
 #snackbar {
   visibility: hidden; /* Hidden by default. Visible on click */
   min-width: 250px; /* Set a default minimum width */

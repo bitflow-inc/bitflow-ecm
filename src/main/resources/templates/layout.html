@@ -54,7 +54,7 @@
 	<div id="bf-nav-below" class="row">
 	    <div class="col-md-3 bf-menu-section">
 	    	<div id="bf-menu-header">
-	    		<i class="far fa-minus-square"></i><i class="far fa-plus-square"></i>
+	    		<i id="btn-collapse-all" class="far fa-minus-square"></i><i id="btn-expand-all" class="far fa-plus-square"></i>
     		</div>
 	    	<div id="tree"></div>
 	    </div>
@@ -88,18 +88,6 @@
 
 <div id="snackbar"></div>
 
-<div id="context-menu" style="display:none"> 
-  <ul class="dropdown-menu">
-    <li><a href="#">Action 1</a></li>
-    <li><a href="#">Action 2</a></li>
-    <li><a href="#">Action 3</a></li>
-    <li class="divider"></li>
-    <li><a href="#">Action 4</a></li>
-    <li><a href="#">Action 5</a></li>
-    <li><a href="#">Action 6</a></li>
-  </ul>
-</div>
-
 <div class="spinner-border" role="status" style="display: none;">
   <span class="sr-only">Loading...</span>
 </div>
@@ -110,6 +98,7 @@
 <script src="/js/context.js"></script>
 <script>
 var tree = {{#tree}}{{{tree}}}{{/tree}}{{^tree}}[]{{/tree}};
+var usehashchange = true;
 window.alert = function(message) {
 	var x = document.getElementById("snackbar");
 	x.className = "show";
@@ -118,18 +107,18 @@ window.alert = function(message) {
 }
 function loadContents(id) {
 	$(".spinner-border").show();
+	// Todo: setTimeout
 	location.href = "/doc#" + id;
 }
 function onTreeItemClick(e, data) {
 	// console.log("onTreeItemClick " + JSON.stringify(data));
-	location.href = "/doc#" + data.id;
+	$(".dropdown-context").hide();
 	if (data.directory==false) {
-		$("#folder-btns-wrapper").hide();
-		$("#file-btns-wrapper").show();
+		location.href = "/doc#" + data.id;
 		loadContents(data.id);
-	} else {
-		$("#file-btns-wrapper").hide();
-		$("#folder-btns-wrapper").show();
+	}else {
+		usehashchange = false;
+		location.href = "/doc#" + data.id;
 	}
 }
 function search(id) {
@@ -192,23 +181,6 @@ function doSearch() {
 		});
 }
 
-function getElementsByClassName(className) {
-	var bodyHtml = document.body; 
-	var bin = []
-	var check = function(bodyHtml) {
-		if(bodyHtml.classList && bodyHtml.classList.contains(className)) {
-			bin.push(bodyHtml);
-		}
-		if(bodyHtml.hasChildNodes()) {
-			for(var i = 0; i< bodyHtml.childNodes.length; i++) {
-				check(bodyHtml.childNodes[i]);
-			}
-		}
-	}
-	check(bodyHtml);
-	return bin;
-}
-
 $(function(){
 	$('#tree').treeview({
 		data: tree,
@@ -243,20 +215,34 @@ $(function(){
 		preventDoubleContext: false, 
 		compress: false
 	});
-	context.attach('#tree', [
-		{text: '새 폴더', href: '#'},
-		{text: '새 게시물', href: '#'},
+	context.attach('.node-tree', [
+		{text: '새 폴더'},
+		{text: '새 게시물', href: '/edit'},
 		{divider: true},
 		{text: '이름변경', href: '#'},
-		{text: '수정', href: '#'},
-		{text: '삭제', href: '#'}
+		{text: '수정', action: function(e) {
+			location.href = '/edit' + location.hash;
+		}},
+		{text: '삭제', href: 'doc#'}
 	]);
-	context.attach('.bf-menu-section', [
+/* 	context.attach('.bf-menu-section', [
 		{text: '새 폴더', href: '#'},
 		{text: '새 게시물', href: '#'},
-	]);
-	$(".dropdown-context").contextmenu(function(e) {
-		e.preventDefault(); // 원래 있던 오른쪽 마우스 이벤트를 무효화한다.
+	]); */
+	$(".node-tree").contextmenu(function(e) {
+		console.log($(this).attr("id"));
+	});
+	$(".bg-contents").contextmenu(function(e) {
+		$(".dropdown-context").hide();
+	});
+	$("header").contextmenu(function(e) {
+		$(".dropdown-context").hide();
+	});
+	$("#btn-collapse-all").click(function() {
+		$('#tree').treeview('collapseAll', { silent: true });
+	});
+	$("#btn-expand-all").click(function() {
+		$('#tree').treeview('expandAll', { silent: true });
 	});
 });
 

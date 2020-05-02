@@ -5,15 +5,15 @@
 		<h4 id="bf-subject" class="ellipsis"></h4>
     </div>
     <div class="col-4">
-		<div id="folder-btns-wrapper">
-	   		<button id="btn-folder-delete" class="btn btn-sm btn-outline-secondary my-2 my-sm-0">삭제</button>
-			<button id="btn-folder-modal"class="btn btn-sm btn-info my-2 my-sm-0">폴더생성</button>
-			<button id="btn-write" class="btn btn-sm btn-info my-2 my-sm-0">게시물생성</button>
-		</div>
-		<div id="file-btns-wrapper" style="display: none;">
-	   		<button id="btn-delete" class="btn btn-sm btn-outline-secondary my-2 my-sm-0">삭제</button>
-			<button id="btn-modify" class="btn btn-sm btn-info my-2 my-sm-0">수정</button>
-		</div>
+			<!-- <div id="folder-btns-wrapper">
+		   		<button id="btn-folder-delete" class="btn btn-sm btn-outline-secondary my-2 my-sm-0">삭제</button>
+				<button id="btn-folder-modal"class="btn btn-sm btn-info my-2 my-sm-0">폴더생성</button>
+				<button id="btn-write" class="btn btn-sm btn-info my-2 my-sm-0">게시물생성</button>
+			</div> -->
+			<div id="file-btns-wrapper" style="display: none;">
+		   		<button id="btn-delete" class="btn btn-sm btn-outline-secondary my-2 my-sm-0">삭제</button>
+				<button id="btn-modify" class="btn btn-sm btn-info my-2 my-sm-0">수정</button>
+			</div>
     </div>
     <hr>
 </div>
@@ -35,8 +35,6 @@ $(function(){
 	if (window.location.hash) {
 		loadContentsAjax();
 	} else {
-		$("#file-btns-wrapper").hide();
-		$("#folder-btns-wrapper").show();
 		$("#bf-subject").css("visibility", "hidden");
 		$("#bf-subject-wrapper").show();
 		$("#bf-content-area").html('<img src="/img/bg-empty.png"/>');
@@ -44,7 +42,11 @@ $(function(){
 });
 
 window.onhashchange = function() {
-	loadContentsAjax();
+	if (usehashchange==true) {
+		loadContentsAjax();
+	} else {
+		usehashchange = true;
+	}
 }
 
 function loadContentsAjax() {
