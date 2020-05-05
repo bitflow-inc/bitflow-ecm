@@ -102,6 +102,10 @@ var context = context || (function () {
 			e.preventDefault();
 			e.stopPropagation();
 			
+			// method76 added
+			console.log('selector ' + $(this).attr("id"));
+			$(this).click();
+
 			$('.dropdown-context:not(.dropdown-context-sub)').hide();
 			
 			$dd = $('#dropdown-' + id);

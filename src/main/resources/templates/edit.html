@@ -8,16 +8,17 @@
 <script src="/synapeditor/synapeditor.config.js"></script>
 <script src="/synapeditor/synapeditor.min.js"></script>
 <script>
+
+var editor;
 function initEditor() {
-    new SynapEditor('synapEditor', synapEditorConfig);
+	editor = new SynapEditor('synapEditor', synapEditorConfig);
 }
-window.onload = function() {
-	initEditor();
-}
+/* window.onload = function() {
+	
+} */
 </script>
 {{/style}}
 <div id="bf-content-area">
-  <form id="frm" name="frm" action="/doc" method="post">
 	<div class="row">
 	    <div class="col-10">
 			<input id="bf-subject-input" name="text" placeholder="제목을 입력하세요" class="form-control form-control-lg" type="text" placeholder=".form-control-lg">
@@ -27,18 +28,41 @@ window.onload = function() {
 	    </div>
 	</div>
 	<textarea id="synapEditor" name="content"></textarea>
-  </form>
 </div>
 
 {{#script}}
 <script>
 $(function() {
+	initEditor();
+	var hash = window.location.hash?window.location.hash.substr(1):'';
 	$("#btn-create").click(function() {
-		var parentid = window.location.hash.substr(1)?"/" + window.location.hash.substr(1):'';
-		console.log("/doc" + parentid);
-		document.frm.action = "/doc" + parentid;
-		document.frm.submit();
+		var url = "/api/v1/ecm/doc" + (hash.length>0?'/'+hash:'');
+		console.log("url " + url);
+		$.ajax({
+			url: url,
+			method: "PUT",
+			data: { 
+				text: $("#bf-subject-input").val(),
+				content: editor.getPublishingHtml(),
+				directory: false }
+		})
+		.done(function(msg) {
+			location.href = "/doc#" + hash;
+		});
 	});
+	if (hash) {
+		$.ajax("/api/v1/ecm/doc/" + hash)
+		.done(function(msg) {
+			console.log('result ' + JSON.stringify(msg.result));
+			$("#bf-subject-input").val(msg.result.title);
+			editor.insertHTML(msg.result.contents);
+		})
+		.fail(function() {
+		})
+		.always(function() {
+			$(".spinner-border").hide();
+		});
+	}
 })
 </script>
 {{/script}}

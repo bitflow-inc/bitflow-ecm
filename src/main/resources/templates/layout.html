@@ -215,14 +215,18 @@ $(function(){
 		preventDoubleContext: false, 
 		compress: false
 	});
-	context.attach('.node-tree', [
-		{text: '새 폴더'},
-		{text: '새 게시물', href: '/edit'},
-		{divider: true},
+	context.attach('.node-file', [
 		{text: '이름변경', href: '#'},
 		{text: '수정', action: function(e) {
 			location.href = '/edit' + location.hash;
 		}},
+		{text: '삭제', href: 'doc#'}
+	]);
+	context.attach('.node-directory', [
+		{text: '새 폴더'},
+		{text: '새 글', href: '/edit'},
+		{divider: true},
+		{text: '이름변경', href: '#'},
 		{text: '삭제', href: 'doc#'}
 	]);
 /* 	context.attach('.bf-menu-section', [
@@ -231,6 +235,10 @@ $(function(){
 	]); */
 	$(".node-tree").contextmenu(function(e) {
 		console.log($(this).attr("id"));
+	});
+	$(".dropdown-context").contextmenu(function(e) {
+		e.preventDefault();
+		e.stopPropagation();
 	});
 	$(".bg-contents").contextmenu(function(e) {
 		$(".dropdown-context").hide();

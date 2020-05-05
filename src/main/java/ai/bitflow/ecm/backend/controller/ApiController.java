@@ -37,31 +37,6 @@ public class ApiController {
 	@Autowired
 	private EcmService eservice;
 	
-//	@PostMapping("/doc")
-//	public GeneralResponse doc(NewContentRequest params) {
-//		logger.debug("params " + params.toString());
-//		GeneralResponse ret = new GeneralResponse();
-//		if (params.getDirectory()!=null && params.getDirectory()) {
-//			String id = eservice.saveFile(params);
-//			logger.debug("filetree " + item.toString());
-//		} else {
-//			eservice.saveFile(params);
-//		}
-//		return ret;
-//	}
-	
-//	@PostMapping("/doc/{parentid}")
-//	public GeneralResponse childDoc(NewContentRequest params, @PathVariable String parentid) {
-//		logger.debug("params " + params.toString());
-//		GeneralResponse ret = new GeneralResponse();
-//		if (params.getDirectory()!=null && params.getDirectory()) {
-//			FileTree item = eservice.saveFile(params, parentid);
-//			logger.debug("filetree " + item.toString());
-//		} else {
-//			eservice.saveFile(params);
-//		}
-//		return ret;
-//	}
 	
 	@PostMapping("/folder")
 	public GeneralResponse folder(NewContentRequest params) {
@@ -71,7 +46,7 @@ public class ApiController {
 			FileTree item = eservice.saveDirectory(params);
 			logger.debug("filetree " + item.toString());
 		} else {
-			eservice.saveFile(params);
+			eservice.newFile(params);
 		}
 		return ret;
 	}
@@ -107,6 +82,25 @@ public class ApiController {
 	public ContentsResponse delete(@PathVariable String id) {
 		ContentsResponse ret = new ContentsResponse();
 		boolean success = eservice.deleteContent(id);
+		return ret;
+	}
+	
+	@PutMapping("/doc")
+	public ContentsResponse newDoc(NewContentRequest params) {
+		ContentsResponse ret = new ContentsResponse();
+		eservice.newFile(params);
+		return ret;
+	}
+	
+//	@PutMapping("/doc/")
+//	public ContentsResponse newDocSlash(NewContentRequest params, @PathVariable String id) {
+//		return newDoc(params);
+//	}
+	
+	@PutMapping("/doc/{id}")
+	public ContentsResponse updateDoc(NewContentRequest params, @PathVariable String id) {
+		ContentsResponse ret = new ContentsResponse();
+		eservice.updateFile(params, id);
 		return ret;
 	}
 	

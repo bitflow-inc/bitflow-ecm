@@ -142,7 +142,7 @@ public class EcmService {
 	 * @param item
 	 */
 	@Transactional
-	public String saveFile(NewContentRequest params) {
+	public String newFile(NewContentRequest params) {
 		params.setDirectory(false);
 		EsFile item1 = new EsFile();
 		item1.setText(params.getText());
@@ -157,7 +157,7 @@ public class EcmService {
 	}
 	
 	@Transactional
-	public String saveFile(NewContentRequest params, String parentid) {
+	public String newFile(NewContentRequest params, String parentid) {
 //		logger.debug("saveFile " + params.toString());
 		params.setDirectory(false);
 		EsFile item1 = new EsFile();
@@ -169,6 +169,30 @@ public class EcmService {
 		params.setId(item2.getId());
 		saveDirectory(params, parentid);
 		return item2.getId();
+	}
+	
+	@Transactional
+	public String updateFile(NewContentRequest params, String id) {
+//		logger.debug("saveFile " + params.toString());
+		// id가 폴더이면 childDoc, id가 파일이면 업데이트
+		params.setDirectory(false);
+		Optional<EsFile> row1 = erepo.findById(id);
+		if (row1.isPresent()) {
+			// 기존 파일 업데이트
+			EsFile item1 = row1.get();
+			item1.setText(params.getText());
+			item1.setHtmlcontent(params.getContent());
+			String textOnly = Jsoup.parse(params.getContent()).text();
+			item1.setSummary(textOnly);
+			erepo.save(item1);
+			params.setId(item1.getId());
+			// Todo: update directory text
+//		saveDirectory(params, parentid);
+			return item1.getId();
+		} else {
+			// 디렉토리의 child로 추가
+			return newFile(params, id);
+		}
 	}
 	
 	/**

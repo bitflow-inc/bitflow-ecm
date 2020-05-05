@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ai.bitflow.ecm.backend.service.EcmService;
@@ -69,14 +70,15 @@ public class MainController {
 	 */
 	@PostMapping("doc")
 	public String createDoc(NewContentRequest params) {
-		String id = eservice.saveFile(params);
+		String id = eservice.newFile(params);
 		return "redirect:/doc#" + id;
 	}
 	
-	@PostMapping("doc/{parentid}")
-	public String createChildDoc(NewContentRequest params, @PathVariable String parentid) {
-		String id = eservice.saveFile(params, parentid);
-		return "redirect:/doc#" + id;
-	}
+//	@PostMapping("doc/{parentid}")
+//	public String createChildDoc(NewContentRequest params, @PathVariable String parentid) {
+//		String id = eservice.newFile(params, parentid);
+//		return "redirect:/doc#" + id;
+//	}
+	
 	
 }
