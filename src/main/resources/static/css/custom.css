@@ -32,9 +32,9 @@ a:hover { text-decoration: none; }
 .navbar-nav .nav-link { padding-left: 12px; }
 .navbar-light .navbar-nav .nav-link.active { color: white; background-color: #7ecef4; border: 1px solid #666; }
 #bf-search { border-radius: 6px 0 0 6px; margin-right: -1px !important; border-color: #6c757d; width: inherit; }
-#bf-search-wrapper { float: right; }
-#btn-search { border-radius: 0 6px 6px 0; -webkit-box-shadow: none; -moz-box-shadow: none;
-    box-shadow: none; }
+#bf-search-wrapper { float: right; margin-right: 36px !important; }
+#btn-search { position: absolute; right: 12px; background-color: white; border-radius: 0 6px 6px 0; 
+	-webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .btn-warning { background-color: #ffff00; color: #6c757d; }
 .btn-info { background-color: #7ecef4; color: white; }
 .btn + .btn { margin-left: 6px; }
