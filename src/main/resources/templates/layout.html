@@ -159,6 +159,7 @@ function doCreateFolder() {
 	});
 }
 
+// https://stackoverflow.com/questions/37049764/how-to-provide-highlighting-with-spring-data-elasticsearch
 function doSearch() {
 	$(".spinner-border").show();
 	$.ajax("/api/v1/ecm/search/" + q)
@@ -171,8 +172,9 @@ function doSearch() {
 				$("#bf-content-area").empty();
 				var html = '<dl class="bf-search-result">';
 				for (var i=0;i<list.length;i++) {
+					console.log('item ' + JSON.stringify(list[i]));
 					html += "<dt>" + list[i].text + "</dt><dd>"
-						+ '<a href="javascript:loadContents(\'' + list[i].id + '\')">' + list[i].summary + "</a></dd>";
+						+ '<a href="javascript:loadContents(\'' + list[i].id + '\')">' + list[i].htmlcontent + "</a></dd>";
 				}
 				html += "</dl>";
 				$("#bf-content-area").html(html);

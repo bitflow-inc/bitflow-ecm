@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ai.bitflow.ecm.backend.dao.ElasticDao;
+import ai.bitflow.ecm.backend.dao.DocumentDao;
 
 @SpringBootTest
 class BitflowEcmApplicationTests {
 
 	@Autowired
-	private ElasticDao edao;
+	private DocumentDao ddao;
 	
 	@Test
 	void contextLoads() {

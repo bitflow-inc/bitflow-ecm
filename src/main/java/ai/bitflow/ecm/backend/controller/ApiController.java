@@ -111,15 +111,15 @@ public class ApiController {
 		SearchResponse ret = new SearchResponse();
 		List<EsFile> list = eservice.search(keyword);
 //		logger.debug("list " + list.toString());
-		for (EsFile item : list) {
-			String summary = item.getSummary();
-			if (summary==null) { continue; }
-			for (String key : keywords) {
-				summary = summary.replaceAll("(?i)" + key, "<em>$0</em>");
-			}
-			item.setSummary(summary);
-			item.setHtmlcontent(null);
-		}
+//		for (EsFile item : list) {
+//			String summary = item.getSummary();
+//			if (summary==null) { continue; }
+//			for (String key : keywords) {
+//				summary = summary.replaceAll("(?i)" + key, "<em>$0</em>");
+//			}
+//			item.setSummary(summary);
+//			item.setHtmlcontent(null);
+//		}
 		ret.setResult(list);
 		return ret;
 	}

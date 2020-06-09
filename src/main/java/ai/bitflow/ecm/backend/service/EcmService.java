@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 
 import com.google.gson.Gson;
 
-import ai.bitflow.ecm.backend.dao.ElasticDao;
+import ai.bitflow.ecm.backend.dao.DocumentDao;
 import ai.bitflow.ecm.backend.dao.FileDao;
 import ai.bitflow.ecm.backend.domain.elastic.EsFile;
 import ai.bitflow.ecm.backend.domain.elastic.FileTree;
@@ -32,13 +32,13 @@ public class EcmService {
 	private final Logger logger = LoggerFactory.getLogger(EcmService.class);
 	
 	@Autowired
-	private ContentsRepository erepo;
+	private ContentsRepository crepo;
 	
 	@Autowired
 	private FileTreeRepository ftrepo;
 
 	@Autowired
-	private ElasticDao edao;
+	private DocumentDao ddao;
 	
 	@Transactional
 	public FileTree saveDirectory(NewContentRequest params) {
@@ -146,10 +146,10 @@ public class EcmService {
 		params.setDirectory(false);
 		EsFile item1 = new EsFile();
 		item1.setText(params.getText());
-		String textOnly = Jsoup.parse(params.getContent()).text();
-		item1.setSummary(textOnly);
+//		String textOnly = Jsoup.parse(params.getContent()).text();
+//		item1.setSummary(textOnly);
 		item1.setHtmlcontent(params.getContent());
-		EsFile item2 = erepo.save(item1);
+		EsFile item2 = crepo.save(item1);
 //		logger.debug("id1 " + item1.getId() + " id2 " + item2.getId());
 		params.setId(item2.getId());
 		saveDirectory(params);
@@ -164,8 +164,8 @@ public class EcmService {
 		item1.setText(params.getText());
 		item1.setHtmlcontent(params.getContent());
 		String textOnly = Jsoup.parse(params.getContent()).text();
-		item1.setSummary(textOnly);
-		EsFile item2 = erepo.save(item1);
+//		item1.setSummary(textOnly);
+		EsFile item2 = crepo.save(item1);
 		params.setId(item2.getId());
 		saveDirectory(params, parentid);
 		return item2.getId();
@@ -176,15 +176,15 @@ public class EcmService {
 //		logger.debug("saveFile " + params.toString());
 		// id가 폴더이면 childDoc, id가 파일이면 업데이트
 		params.setDirectory(false);
-		Optional<EsFile> row1 = erepo.findById(id);
+		Optional<EsFile> row1 = crepo.findById(id);
 		if (row1.isPresent()) {
 			// 기존 파일 업데이트
 			EsFile item1 = row1.get();
 			item1.setText(params.getText());
 			item1.setHtmlcontent(params.getContent());
 			String textOnly = Jsoup.parse(params.getContent()).text();
-			item1.setSummary(textOnly);
-			erepo.save(item1);
+//			item1.setSummary(textOnly);
+			crepo.save(item1);
 			params.setId(item1.getId());
 			// Todo: update directory text
 //		saveDirectory(params, parentid);
@@ -201,26 +201,26 @@ public class EcmService {
 	 * @return
 	 */
 	public EsFile getContents(String id) {
-		Optional<EsFile> row = erepo.findById(id);
+		Optional<EsFile> row = crepo.findById(id);
 		return row.isPresent()?row.get():null;
 	}
 	
 	@Transactional
 	public boolean deleteContent(String id) {
-		Optional<EsFile> row = erepo.findById(id);
+		Optional<EsFile> row = crepo.findById(id);
 		if (row.isPresent()) {
 			EsFile item = row.get();
-			erepo.delete(item);
+			crepo.delete(item);
 		}
 		return true;
 	}
 
 	public List<EsFile> search(String keyword) {
-		return erepo.findAllByTextOrSummary(keyword, keyword);
+		return crepo.findAllByTextContainsOrHtmlcontentContains(keyword, keyword);
 	}
 	
 	public String getFileTree() {
-		List<FileTree> list = edao.findTree();
+		List<FileTree> list = ddao.findTree();
 		logger.debug("list" + list.toString());
 		return new Gson().toJson(list);
 	}
