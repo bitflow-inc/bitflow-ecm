@@ -1,6 +1,7 @@
 package ai.bitflow.ecm.backend.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import ai.bitflow.ecm.backend.dao.DocumentDao;
 import ai.bitflow.ecm.backend.dao.FileDao;
@@ -215,8 +217,12 @@ public class EcmService {
 		return true;
 	}
 
-	public List<EsFile> search(String keyword) {
-		return crepo.findAllByTextContainsOrHtmlcontentContains(keyword, keyword);
+	public List<EsFile> search(String[] keyword) {
+//		List<String> params = new ArrayList<>();
+//		for (String item : keyword) {
+//			params.add(item);
+//		}
+		return crepo.findAllByTextContainsOrHtmlcontentContains(Arrays.asList(keyword), Arrays.asList(keyword));
 	}
 	
 	public String getFileTree() {

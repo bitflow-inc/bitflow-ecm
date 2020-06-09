@@ -104,12 +104,15 @@ public class ApiController {
 		return ret;
 	}
 	
+	// ES7 윈도우즈 참고)
+	// https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 	@GetMapping("/search/{keyword}")
 	public SearchResponse search(@PathVariable String keyword) {
 		logger.debug("keyword " + keyword);
 		String[] keywords = keyword.split(" ");
+		logger.debug("keywords " + keywords);
 		SearchResponse ret = new SearchResponse();
-		List<EsFile> list = eservice.search(keyword);
+		List<EsFile> list = eservice.search(keywords);
 //		logger.debug("list " + list.toString());
 //		for (EsFile item : list) {
 //			String summary = item.getSummary();
