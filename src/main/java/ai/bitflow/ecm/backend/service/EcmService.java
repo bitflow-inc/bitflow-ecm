@@ -63,7 +63,7 @@ public class EcmService {
 			FileTree item1 = row.get();
 			List<FileTree> nodes = item1.getNodes();
 			if (nodes==null) {
-				nodes = new ArrayList<>();
+				nodes = new ArrayList<FileTree>();
 			}
 			FileTree item2 = new FileTree();
 			if (params.getId()!=null) {
@@ -107,7 +107,7 @@ public class EcmService {
 //			logger.debug("saveDirectoryRecursive found");
 			List<FileTree> nodes = item1.getNodes();
 			if (nodes==null) {
-				nodes = new ArrayList<>();
+				nodes = new ArrayList<FileTree>();
 			}
 			// 부모 ID를 찾았으면 새 Tree 객체 생성
 			FileTree item2 = new FileTree();

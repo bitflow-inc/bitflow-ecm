@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class Base62Util {
 
-    private Map<String, String> longToShort = new HashMap<>();
-    private Map<String, String> shortToLong = new HashMap<>();
+    private Map<String, String> longToShort = new HashMap<String, String>();
+    private Map<String, String> shortToLong = new HashMap<String, String>();
 
     // Encodes a URL to a shortened URL.
     public String encode(String longUrl) {
